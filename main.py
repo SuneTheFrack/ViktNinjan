@@ -13,6 +13,10 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 client = gspread.authorize(creds)
 sheet = client.open_by_key(os.environ["SHEET_ID"]).sheet1
 
+@app.route('/')
+def home():
+    return "ViktNinjan är igång!", 200
+    
 @app.route('/loggmaltid', methods=['POST'])
 def logg_maltid():
     data = request.json
