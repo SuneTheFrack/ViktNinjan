@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -31,7 +30,6 @@ def logg_maltid():
     row = [datum, tid, person, mål, innehåll, kcal, fett, mättat_fett, salt, fibrer]
     sheet.append_row(row)
     return jsonify({"status": "OK", "rad": row}), 200
-    
+
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", port=8000)
