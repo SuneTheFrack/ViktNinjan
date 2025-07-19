@@ -1,17 +1,18 @@
-from flask import Flask, request
+
+from flask import Flask, request, jsonify
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
+import json
 
 app = Flask(__name__)
 
-# Setup Google Sheets credentials
+# Google Sheets-auth från miljövariabel
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+creds_json = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 client = gspread.authorize(creds)
-
-# Öppna arket – byt till ditt eget ark-namn
-sheet = client.open("ViktNinjan").sheet1
+sheet = client.open_by_key(os.environ["SHEET_ID"]).sheet1
 
 @app.route('/loggmaltid', methods=['POST'])
 def logg_maltid():
@@ -29,6 +30,4 @@ def logg_maltid():
 
     row = [datum, tid, person, mål, innehåll, kcal, fett, mättat_fett, salt, fibrer]
     sheet.append_row(row)
-    return {"status": "OK", "rad": row}, 200
-
-app.run(host='0.0.0.0', port=81)
+    return jsonify({"status": "OK", "rad": row}), 200
