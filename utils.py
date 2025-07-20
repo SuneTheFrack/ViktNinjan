@@ -6,12 +6,12 @@ from datetime import datetime
 def get_datum_tid(data):
     now = datetime.now()
     
-    # Om datum inte anges → använd dagens datum
+    # Datum: om saknas → dagens datum
     datum = data.get("datum")
-    if not datum:
+    if not datum or str(datum).lower() == "nu":
         datum = now.strftime("%Y-%m-%d")
 
-    # Om tid saknas eller är "nu" → använd aktuell tid
+    # Tid: om saknas eller är "nu" → aktuell tid
     tid = data.get("tid")
     if not tid or str(tid).lower() == "nu":
         tid = now.strftime("%H:%M")
