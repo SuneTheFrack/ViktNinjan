@@ -3,6 +3,7 @@
 
 from flask import request, jsonify
 from auth import sheet
+from utils import get_datum_tid
 
 def logg_maltid():
     data = request.json
