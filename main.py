@@ -1,39 +1,18 @@
-from flask import Flask, request, jsonify
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import os
-import json
+from flask import Flask
+from matlogg import logg_maltid
+from viktlogg import logg_vikt
+from rorelselogg import logg_rorelse
 
 app = Flask(__name__)
-
-# Google Sheets-auth från miljövariabel
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds_json = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
-client = gspread.authorize(creds)
-sheet = client.open_by_key(os.environ["SHEET_ID"]).sheet1
 
 @app.route('/')
 def home():
     return "ViktNinjan är igång!", 200
-    
-@app.route('/loggmaltid', methods=['POST'])
-def logg_maltid():
-    data = request.json
-    datum = data.get("datum", "")
-    tid = data.get("tid", "")
-    person = data.get("person", "")
-    mål = data.get("mål", "")
-    innehåll = data.get("innehåll", "")
-    kcal = data.get("kcal", "")
-    fett = data.get("fett", "")
-    mättat_fett = data.get("mättat_fett", "")
-    salt = data.get("salt", "")
-    fibrer = data.get("fibrer", "")
 
-    row = [datum, tid, person, mål, innehåll, kcal, fett, mättat_fett, salt, fibrer]
-    sheet.append_row(row)
-    return jsonify({"status": "OK", "rad": row}), 200
+# Knyt alla logg-endpoints
+app.add_url_rule("/loggmaltid", view_func=logg_maltid, methods=["POST"])
+app.add_url_rule("/loggvikt", view_func=logg_vikt, methods=["POST"])
+app.add_url_rule("/loggrorelse", view_func=logg_rorelse, methods=["POST"])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
