@@ -2,9 +2,11 @@
 # Hjälpfunktioner för loggmoduler
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
 
 def get_datum_tid(data):
-    now = datetime.now()
+    now = datetime.now(ZoneInfo("Europe/Stockholm"))
 
     datum = data.get("datum")
     if not datum or str(datum).strip().lower() == "nu":
