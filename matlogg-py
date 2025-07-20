@@ -6,6 +6,10 @@ from auth import sheet
 
 def logg_maltid():
     data = request.json
+
+    # kallar på datum i utils
+    datum, tid = get_datum_tid(data)
+
     row = [
         data.get("datum", ""),
         data.get("tid", ""),
