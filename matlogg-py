@@ -10,17 +10,17 @@ def logg_maltid():
         data.get("datum", ""),
         data.get("tid", ""),
         data.get("person", ""),
-        data.get("mål", ""),
-        data.get("innehåll", ""),
+        data.get("mal", ""),
+        data.get("innehall", ""),
         data.get("kcal", ""),
         data.get("protein", ""),
         data.get("fett", ""),
-        data.get("mättat_fett", ""),
+        data.get("mattat_fett", ""),
         data.get("kolhydrater", ""),
         data.get("salt", ""),
-        data.get("fibrer", "")
+        data.get("fibrer", ""),
+        data.get("vatska_ml", "")
     ]
     
     sheet.worksheet("Mat").append_row(row)
     return jsonify({"status": "OK", "rad": row}), 200
-
