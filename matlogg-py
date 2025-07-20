@@ -1,1 +1,26 @@
+# matlogg.py
+# Tar emot måltidsdata och loggar det till fliken "Mat" i Google Sheets
+
+from flask import request, jsonify
+from auth import sheet
+
+def logg_maltid():
+    data = request.json
+    row = [
+        data.get("datum", ""),
+        data.get("tid", ""),
+        data.get("person", ""),
+        data.get("mål", ""),
+        data.get("innehåll", ""),
+        data.get("kcal", ""),
+        data.get("protein", ""),
+        data.get("fett", ""),
+        data.get("mättat_fett", ""),
+        data.get("kolhydrater", ""),
+        data.get("salt", ""),
+        data.get("fibrer", "")
+    ]
+    
+    sheet.worksheet("Mat").append_row(row)
+    return jsonify({"status": "OK", "rad": row}), 200
 
