@@ -3,17 +3,22 @@
 
 from flask import request, jsonify
 from auth import sheet
+from utils import get_datum_tid
 
 def logg_rorelse():
     data = request.json
+
+    # Hämtar datum och tid, inklusive stöd för "nu"
+    datum, tid = get_datum_tid(data)
+
     row = [
-        data.get("datum", ""),
-        data.get("tid", ""),
+        datum,
+        tid,
         data.get("person", ""),
         data.get("steg", ""),
         data.get("rorelsetid_min", ""),
         data.get("kalorier", "")
     ]
-    
-    sheet.worksheet("Rörelse").append_row(row)
+
+    sheet.worksheet("Rorelse").append_row(row)
     return jsonify({"status": "OK", "rad": row}), 200
