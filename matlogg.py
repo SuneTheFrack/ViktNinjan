@@ -12,8 +12,8 @@ def logg_maltid():
     datum, tid = get_datum_tid(data)
 
     row = [
-        data.get("datum", ""),
-        data.get("tid", ""),
+        datum,
+        tid,
         data.get("person", ""),
         data.get("mal", ""),
         data.get("innehall", ""),
