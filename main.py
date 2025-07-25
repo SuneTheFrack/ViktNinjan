@@ -1,5 +1,5 @@
 from flask import Flask
-from matlogg import logg_maltid
+from logg_router import logg_allt
 from viktlogg import logg_vikt
 from rorelselogg import logg_rorelse
 
@@ -10,8 +10,7 @@ def home():
     return "ViktNinjan är igång!", 200
 
 # Knyt alla logg-endpoints
-app.add_url_rule("/loggmaltid", view_func=logg_maltid, methods=["POST"])
-app.add_url_rule("/logg", view_func=logg_maltid, methods=["POST"])
+app.add_url_rule("/logg", view_func=logg_allt, methods=["POST"])
 app.add_url_rule("/loggvikt", view_func=logg_vikt, methods=["POST"])
 app.add_url_rule("/loggrorelse", view_func=logg_rorelse, methods=["POST"])
 
