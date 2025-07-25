@@ -2,7 +2,7 @@
 # Tar emot måltidsdata och loggar det till fliken "Mat" i Google Sheets
 
 from flask import request, jsonify
-from auth import sheet
+from utils.sheets import skriv_till_sheet
 from tidutils import get_datum_tid
 
 def logg_maltid_intern(data):
