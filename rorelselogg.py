@@ -3,7 +3,7 @@
 
 from flask import request, jsonify
 from auth import sheet
-from utils import get_datum_tid
+from tidutils import get_datum_tid
 
 def logg_rorelse():
     data = request.json
