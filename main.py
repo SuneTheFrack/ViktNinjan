@@ -1,18 +1,23 @@
 import logging
-
-logging.basicConfig(level=logging.INFO)
-
+import sys
 from fastapi import FastAPI
-from routers import matlogg, viktlogg, rorelselogg, preferences
+from routers import matlogg  # Endast matlogg aktiv just nu
+
+# Loggning till stdout (för att synas i Railway logs)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = FastAPI()
 
+# Registrera routers
 app.include_router(matlogg.router)
-# app.include_router(viktlogg.router)
-# app.include_router(rorelselogg.router)
-# app.include_router(preferenser.router)
 
 @app.get("/")
 def root():
     return {"message": "ViktNinjan API är igång"}
 
+# Endast vid lokal körning (inte nödvändig på Railway)
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.environ.get("PORT", 8000))  # Använd Railway PORT
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
