@@ -1,7 +1,6 @@
 # matlogg.py
 # Tar emot måltidsdata och loggar det till fliken "Mat" i Google Sheets
 
-from flask import jsonify
 from utils.sheets import skriv_till_sheet
 from tidutils import get_datum_tid
 
@@ -37,7 +36,7 @@ def logg_maltid_intern(data):
 
     skriv_till_sheet(rad, blad_namn="Mat")
 
-    return jsonify({
+    return {
         "status": "ok",
         "message": f"✅ Mat loggad för {person} kl. {tid}"
-    }), 200
+    }, 200
