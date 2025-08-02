@@ -1,16 +1,11 @@
-
 from utils.sheets_auth import get_sheets_service
+import logging
 
-def skriv_till_sheet(rad, blad_namn="Mat"):
-    print("📤 Försöker skriva rad till Google Sheet:")
-    print("Blad:", blad_namn)
-    print("Data:", rad)
-
+def skriv_till_sheet(rad: list, blad_namn="Mat"):
     try:
-        sheet = get_sheets_service()
-        worksheet = sheet.worksheet(blad_namn)
-        worksheet.append_row(rad, value_input_option="USER_ENTERED")
-        print("✅ Skrivning lyckades")
+        service, sheet_id = get_sheets_service()
+        sheet = service.worksheet(blad_namn)
+        sheet.append_row(rad)
     except Exception as e:
-        print("❌ Fel vid skrivning till Google Sheet:", str(e))
+        logging.error(f"Fel vid skrivning till Google Sheets: {e}")
         raise
