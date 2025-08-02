@@ -1,3 +1,4 @@
+fastapi
 flask
 oauth2client
 uvicorn[standard]
