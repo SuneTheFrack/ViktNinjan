@@ -3,6 +3,19 @@ import sys
 from fastapi import FastAPI
 from routers import matlogg  # Endast matlogg aktiv just nu
 
+
+import os
+
+@app.get("/debug-env")
+def debug_env():
+    return {
+        "SERVICE_ACCOUNT_JSON_exists": "SERVICE_ACCOUNT_JSON" in os.environ,
+        "SHEET_ID_exists": "SHEET_ID" in os.environ
+    }
+
+
+
+
 # Loggning till stdout (för att synas i Railway logs)
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
