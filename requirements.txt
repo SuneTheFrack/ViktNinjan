@@ -1,5 +1,4 @@
 fastapi
-flask
 oauth2client
 uvicorn[standard]
 google-api-python-client
