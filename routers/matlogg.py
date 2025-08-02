@@ -23,6 +23,8 @@ class MaltidsData(BaseModel):
 @router.post("/logg")
 def logg_maltid(data: MaltidsData):
     try:
+        logging.info(f"➡️ Inkommande data: {data.dict()}")
+
         datum, tid = get_datum_tid(data.dict())
 
         rad = [
@@ -41,7 +43,7 @@ def logg_maltid(data: MaltidsData):
             data.vatska_ml,
         ]
 
-        logging.info(f"Loggar rad: {rad}")
+        logging.info(f"📝 Loggar rad till Google Sheet: {rad}")
         skriv_till_sheet(rad, blad_namn="Mat")
 
         return {
@@ -50,5 +52,5 @@ def logg_maltid(data: MaltidsData):
         }
 
     except Exception as e:
-        logging.error(f"Fel vid loggning: {e}")
+        logging.error(f"❌ Fel vid loggning: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Fel vid loggning: {str(e)}")
