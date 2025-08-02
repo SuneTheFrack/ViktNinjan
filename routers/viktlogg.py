@@ -1,25 +1,24 @@
-from flask import request, jsonify
-import datetime
-from services.sheets_writer import skriv_till_sheet  # För att skriva till Google Sheet
+# viktlogg.py
+# Tar emot viktdata och loggar det till fliken "Vikt" i Google Sheets
 
-def logg_vikt():
-    data = request.get_json()
+from services.sheets_writer import skriv_till_sheet
+from tidutils import get_datum_tid
 
-    if not data or "vikt" not in data:
-        return jsonify({"status": "error", "message": "Ingen vikt angiven"}), 400
-
-    vikt = data["vikt"]
-    datum = data.get("datum") or datetime.date.today().isoformat()
-    tid = data.get("tid") or datetime.datetime.now().strftime("%H:%M")
+def logg_vikt_intern(data):
+    datum, tid = get_datum_tid(data)
     person = data.get("person", "Henrik")
+    vikt = data.get("vikt", 0)
 
-    # Bygg raden som ska skrivas in i Google Sheet-bladet "Vikt"
-    rad = [datum, tid, person, vikt]
+    rad = {
+        "datum": datum,
+        "tid": tid,
+        "person": person,
+        "vikt": vikt
+    }
 
-    # 📝 Viktigt: blad_namn = "Vikt" (inte "Viktlogg" som tidigare!)
-    skriv_till_sheet(rad, blad_namn="Vikt")
+    skriv_till_sheet(rad, sheet_name="Vikt")
 
-    return jsonify({
+    return {
         "status": "ok",
-        "message": f"✅ Vikt {vikt} kg loggad för {person} kl. {tid}"
-    }), 200
+        "message": f"✅ Vikt loggad för {person}: {vikt} kg kl. {tid}"
+    }, 200
