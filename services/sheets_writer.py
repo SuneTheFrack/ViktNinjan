@@ -1,3 +1,5 @@
+import os
+
 from utils.sheets_auth import get_sheets_service
 import logging
 
