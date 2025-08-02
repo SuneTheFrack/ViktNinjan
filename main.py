@@ -1,18 +1,13 @@
-from flask import Flask
-from logg_router import logg_allt
-from viktlogg import logg_vikt
-from rorelselogg import logg_rorelse
+from fastapi import FastAPI
+from routers import matlogg, viktlogg, rorelselogg, preferenser
 
-app = Flask(__name__)
+app = FastAPI()
 
-@app.route('/')
-def home():
-    return "ViktNinjan är igång!", 200
+app.include_router(matlogg.router)
+app.include_router(viktlogg.router)
+app.include_router(rorelselogg.router)
+app.include_router(preferenser.router)
 
-# Knyt alla logg-endpoints
-app.add_url_rule("/logg", view_func=logg_allt, methods=["POST"])
-app.add_url_rule("/loggvikt", view_func=logg_vikt, methods=["POST"])
-app.add_url_rule("/loggrorelse", view_func=logg_rorelse, methods=["POST"])
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+@app.get("/")
+def root():
+    return {"message": "ViktNinjan API är igång"}
