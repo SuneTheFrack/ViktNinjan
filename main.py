@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import matlogg, viktlogg, rorelselogg, preferenser
+from routers import matlogg, viktlogg, rorelselogg, preferences
 
 app = FastAPI()
 
