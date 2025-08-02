@@ -1,29 +1,16 @@
+
 from utils.sheets_auth import get_sheets_service
-import os
 
-def skriv_till_sheet(data: dict, sheet_name="Matlogg"):
-    service = get_sheets_service()
-    sheet = service.spreadsheets()
+def skriv_till_sheet(rad, blad_namn="Mat"):
+    print("📤 Försöker skriva rad till Google Sheet:")
+    print("Blad:", blad_namn)
+    print("Data:", rad)
 
-    # Extrahera kolumner i rätt ordning
-    headers = list(data.keys())
-    values = list(data.values())
-
-    # Sätt upp body som en ny rad
-    body = {
-        "values": [values]
-    }
-
-    # Bygg range (ex: Matlogg!A1)
-    range_to_use = f"{sheet_name}!A1"
-
-    # Lägg till raden
-    result = sheet.values().append(
-        spreadsheetId=os.environ["SHEET_ID"],
-        range=range_to_use,
-        valueInputOption="USER_ENTERED",
-        insertDataOption="INSERT_ROWS",
-        body=body
-    ).execute()
-
-    return result
+    try:
+        sheet = get_sheets_service()
+        worksheet = sheet.worksheet(blad_namn)
+        worksheet.append_row(rad, value_input_option="USER_ENTERED")
+        print("✅ Skrivning lyckades")
+    except Exception as e:
+        print("❌ Fel vid skrivning till Google Sheet:", str(e))
+        raise
