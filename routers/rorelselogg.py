@@ -1,28 +1,28 @@
-# rorelselogg.py
-# Tar emot rörelsedata och loggar det till fliken "Rorelse" i Google Sheets
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import Optional
+import logging
 
-from services.sheets_writer import skriv_till_sheet
-from tidutils import get_datum_tid
+from rorelselogg import logg_rorelse_intern
 
-def logg_rorelse_intern(data):
-    datum, tid = get_datum_tid(data)
-    person = data.get("person", "Henrik")
-    steg = data.get("steg", 0)
-    rorelsetid = data.get("rorelsetid_min", 0)
-    kalorier = data.get("kalorier", 0)
+router = APIRouter()
 
-    rad = {
-        "datum": datum,
-        "tid": tid,
-        "person": person,
-        "steg": steg,
-        "rorelsetid_min": rorelsetid,
-        "kalorier": kalorier
-    }
+# Modell för inkommande data
+class RorelseData(BaseModel):
+    person: Optional[str] = "Henrik"
+    steg: Optional[int] = 0
+    rorelsetid_min: Optional[float] = 0
+    kalorier: Optional[float] = 0
 
-    skriv_till_sheet(rad, sheet_name="Rorelse")
+@router.post("/loggrorelse")
+def loggrorelse(data: RorelseData):
+    try:
+        data_dict = data.dict()
+        logging.info(f"➡️ Inkommande rörelsedata: {data_dict}")
 
-    return {
-        "status": "ok",
-        "message": f"✅ Rörelse loggad för {person} ({steg} steg, {kalorier} kcal)"
-    }, 200
+        resultat, status = logg_rorelse_intern(data_dict)
+        return resultat
+
+    except Exception as e:
+        logging.error(f"❌ Fel vid rörelselogging: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Fel vid loggning: {str(e)}")
