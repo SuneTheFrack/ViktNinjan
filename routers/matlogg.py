@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from services.sheets_writer import skriv_till_sheet
+from services.sheets_writer import logga_data
 from tidutils import get_datum_tid
 import logging
 
@@ -23,28 +23,14 @@ class MaltidsData(BaseModel):
 @router.post("/logg")
 def logg_maltid(data: MaltidsData):
     try:
-        logging.info(f"➡️ Inkommande data: {data.dict()}")
+        data_dict = data.dict()
 
-        datum, tid = get_datum_tid(data.dict())
+        datum, tid = get_datum_tid(data_dict)
+        data_dict["datum"] = datum
+        data_dict["tid"] = tid
 
-        rad = [
-            datum,
-            tid,
-            data.person,
-            data.mal,
-            data.innehall,
-            data.kcal,
-            data.protein,
-            data.fett,
-            data.mattat_fett,
-            data.kolhydrater,
-            data.salt,
-            data.fibrer,
-            data.vatska_ml,
-        ]
-
-        logging.info(f"📝 Loggar rad till Google Sheet: {rad}")
-        skriv_till_sheet(rad, blad_namn="Mat")
+        logging.info(f"➡️ Inkommande data: {data_dict}")
+        logga_data(data_dict, blad_namn="Mat")
 
         return {
             "status": "ok",
