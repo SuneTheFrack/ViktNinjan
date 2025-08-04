@@ -2,7 +2,7 @@ import logging
 import sys
 import os
 from fastapi import FastAPI
-from routers import matlogg  # Endast matlogg aktiv just nu
+from routers import matlogg, rorelselog, viktlogg
 from utils.sheets_auth import get_sheets_service
 
 # Loggning till stdout (för Railway logs)
@@ -10,8 +10,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 app = FastAPI()
 
-# Registrera routers
+
+# Registrera alla aktiva endpoints
 app.include_router(matlogg.router)
+app.include_router(rorelselog.router)
+app.include_router(viktlogg.router)
+
 
 @app.get("/")
 def root():
