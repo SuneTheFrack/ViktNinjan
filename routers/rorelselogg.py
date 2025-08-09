@@ -11,7 +11,7 @@ router = APIRouter()
 class RorelseData(BaseModel):
     person: Optional[str] = "Henrik"
     steg: Optional[int] = 0
-    rorelsetid_min: Optional[float] = 0
+    minuter: Optional[float] = 0
     kalorier: Optional[float] = 0
 
 @router.post("/loggrorelse")
